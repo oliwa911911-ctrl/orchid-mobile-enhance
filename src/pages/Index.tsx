@@ -144,7 +144,7 @@ export default function Index() {
   useReveal()
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2200)
+    const timer = setTimeout(() => setLoading(false), 1400)
     return () => clearTimeout(timer)
   }, [])
 
