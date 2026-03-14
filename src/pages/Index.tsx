@@ -6,60 +6,53 @@ const topics = [
   {
     id: '01', label: 'Co to jest AI?',
     desc: 'Fundament wiedzy — od historii do współczesności.',
-    img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=90',
   },
   {
     id: '02', label: 'Bankowość & Cyberbezpieczeństwo',
     desc: 'Jak AI chroni i transformuje sektor finansowy.',
-    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=90',
   },
   {
     id: '03', label: 'AI w Edukacji',
     desc: 'Personalizacja nauki i przyszłość szkół.',
-    img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=900&q=90',
   },
   {
     id: '04', label: 'AI w Biznesie',
     desc: 'Automatyzacja, dane i przewaga konkurencyjna.',
-    img: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=900&q=90',
   },
   {
     id: '05', label: 'AI w Kosmosie i Nauce',
     desc: 'Odkrywanie wszechświata z pomocą algorytmów.',
-    img: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=900&q=90',
   },
   {
     id: '06', label: 'AI w Kulturze i Mediach',
     desc: 'Kreatywność, generatywne media i sztuka.',
-    img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=900&q=90',
   },
   {
     id: '07', label: 'AI w Medycynie',
     desc: 'Diagnostyka, genomika i leki przyszłości.',
-    img: 'https://images.unsplash.com/photo-1576671081837-49000212a370?w=900&q=90',
   },
 ]
 
 const whyItems = [
   {
     num: '01',
-    title: 'Innowacyjne podejście',
-    desc: 'Żadnych nudnych prezentacji. Każdy panel to żywa dyskusja z ekspertami — praktyczna, prowokująca, niezapomniana.',
+    title: 'Eksperci, nie slajdy',
+    desc: 'Żywe panele z praktykami AI — ludźmi, którzy wdrażają technologię, nie tylko o niej mówią. Zero teorii, sto procent wartości.',
   },
   {
     num: '02',
-    title: 'Networking na szczycie',
-    desc: 'Dołącz do liderów, startupowców i wizjonerów. Konferencja w wyjątkowej górskiej scenerii tworzy przestrzeń do prawdziwych rozmów.',
+    title: 'Kontakty na lata',
+    desc: 'Kameralna formuła w górskiej scenerii sprzyja prawdziwym rozmowom. Tu poznasz ludzi, z którymi będziesz budować przyszłość.',
   },
   {
     num: '03',
-    title: 'Wsparcie młodych',
-    desc: 'Budujemy pokolenie, które rozumie AI. Specjalna strefa dla studentów i młodych profesjonalistów — mentoring, wiedza, kontakty.',
+    title: 'Platforma dla młodych',
+    desc: 'Dedykowana strefa mentoringu dla studentów i juniorów. Wiedza, kontakty i realne szanse — bo przyszłość AI zaczyna się od Ciebie.',
   },
   {
     num: '04',
-    title: 'Format, który angażuje',
-    desc: 'Siedem tematycznych paneli, każdy z moderatorem i otwartą dyskusją. Mówisz, słuchasz, działasz — nie tylko siedzisz.',
+    title: 'Mówisz, nie słuchasz',
+    desc: 'Siedem paneli otwartych na dyskusję. Każdy uczestnik ma głos — bo najlepsze pomysły rodzą się w dialogu, nie w monologu.',
   },
 ]
 
@@ -144,20 +137,33 @@ function useReveal() {
 /* ── component ─────────────────────────────────────────── */
 export default function Index() {
   const [hovered, setHovered] = useState<number | null>(null)
-  const [previewXY, setPreviewXY] = useState({ x: -400, y: -400 })
   const { dotRef, ringRef } = useSmoothCursor()
   const p = useParallax()
   const countdown = useCountdown()
+  const [loading, setLoading] = useState(true)
   useReveal()
 
   useEffect(() => {
-    const fn = (e: MouseEvent) => setPreviewXY({ x: e.clientX, y: e.clientY })
-    window.addEventListener('mousemove', fn)
-    return () => window.removeEventListener('mousemove', fn)
+    const timer = setTimeout(() => setLoading(false), 2200)
+    return () => clearTimeout(timer)
   }, [])
 
+  if (loading) {
+    return (
+      <div className="loader-screen">
+        <div className="loader-content">
+          <div className="loader-ring" />
+          <p className="loader-text">AI Beyond Intelligence</p>
+          <div className="loader-bar">
+            <div className="loader-bar-fill" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="shell">
+    <div className="shell page-enter">
       {/* cursor */}
       <div ref={dotRef} className="cur-dot" />
       <div ref={ringRef} className="cur-ring" />
@@ -170,27 +176,19 @@ export default function Index() {
       <div className="orb orb-1" style={{ transform: `translate(${p.x * 1.2}px, ${p.y * 1.2}px)` }} />
       <div className="orb orb-2" style={{ transform: `translate(${p.x * -0.8}px, ${p.y * -0.8}px)` }} />
 
-      {/* topic hover preview */}
-      <div
-        className={`topic-preview${hovered !== null ? ' visible' : ''}`}
-        style={{
-          backgroundImage: hovered !== null ? `url(${topics[hovered].img})` : undefined,
-          transform: `translate(${previewXY.x + 18}px, ${previewXY.y - 95}px)`,
-        }}
-      />
-
       {/* ══ HERO ══ */}
       <section className="hero">
-        <p className="eyebrow">Erste Bank presents</p>
-        <h1 className="title">
+        <p className="eyebrow hero-anim hero-anim-1">Erste Bank presents</p>
+        <h1 className="title hero-anim hero-anim-2">
           AI Beyond<br /> Intelligence
         </h1>
-        <p className="location-tag">
+        <div className="hero-accent-line hero-anim hero-anim-3" />
+        <p className="location-tag hero-anim hero-anim-3">
           <span className="loc-icon">▲</span>
           Konferencja na górze · Warszawa · 11 czerwca 2026
         </p>
 
-        <div className="countdown">
+        <div className="countdown hero-anim hero-anim-4">
           {([['dni', countdown.d], ['godz', countdown.h], ['min', countdown.m], ['sek', countdown.s]] as const).map(([lbl, val]) => (
             <div className="cd-cell" key={lbl}>
               <span className="cd-val">{pad(val as number)}</span>
@@ -199,9 +197,16 @@ export default function Index() {
           ))}
         </div>
 
-        <div className="hero-actions">
+        <div className="hero-actions hero-anim hero-anim-5">
           <a href="https://example.com/rejestracja" className="cta cta-primary">Zarejestruj się</a>
           <a href="#program" className="cta cta-ghost">Zobacz program</a>
+        </div>
+
+        <div className="hero-scroll-hint hero-anim hero-anim-6">
+          <div className="scroll-mouse">
+            <div className="scroll-dot" />
+          </div>
+          <span>Przewiń</span>
         </div>
       </section>
 
@@ -227,13 +232,6 @@ export default function Index() {
           ))}
         </ul>
       </section>
-
-      {/* ══ PHOTO STRIP ══ */}
-      <div className="photo-strip" data-reveal>
-        {topics.map((t) => (
-          <div key={t.id} className="strip-img" style={{ backgroundImage: `url(${t.img})` }} />
-        ))}
-      </div>
 
       {/* ══ WHY ══ */}
       <section className="section" data-reveal>
